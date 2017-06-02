@@ -1,0 +1,11 @@
+Package: lreauto
+Title: . What the package does (one line, title case)
+Version: 0.0.0.9000
+Authors@R: person("Yamane", "Takahiro", email = "174e324e@stu.kobe-u.ac.jp", role = c("aut", "cre"))
+Description: What the package does (one paragraph).
+Depends: R (>= 3.3.0)
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+Imports: QZ
+RoxygenNote: 6.0.1

@@ -1,0 +1,49 @@
+
+lre_auto_bk <- function(A, x0) {
+# The contents of hw07's lre_auto
+   Asch <- Matrix::Schur(A)
+   Asch2 <- QZ::qz.dtrsen(Asch$T, Asch$Q, abs(Asch$EValues) <= 1)
+   Q1S <- Asch2$Q[1:npr,1:npr] 
+   Q2S <- Asch2$Q[(npr+1):(nrow(Asch2$Q)),1:npr]
+
+   g <- function(x0){
+   Q2S %*% solve(Q1S) %*% x0
+   }
+   h <- function(x0){
+   (A[1:npr, 1:npr] %*% x0) + (A[1:npr, (npr+1):ncol(A)] %*% Q2S %*% solve(Q1S)) %*% x0
+   }
+   list(g = g, h = h)
+}
+
+lre_auto_klein <- function(A, E, x0) {
+# Solution here using QZ decomposition!
+  ret <- QZ::qz(A, E)
+  abs(ret$ALPHA / ret$BETA)
+  ord <- abs(ret$ALPHA / ret$BETA) <= 1
+  ret2 <- QZ::qz.dtgsen(ret$S, ret$T, ret$Q, ret$Z,select = ord)
+  Z1S <- ret2$Z[1:npr,1:npr]
+  Z2S <- ret2$Z[(npr+1):(nrow(ret2$Z))]
+  SSS <- ret2$T[1:npr, 1:npr]
+  TSS <- ret2$S[1:npr, 1:npr]
+  
+  g <- function(x0){
+  Z2S %*% solve(Z1S) %*% x0
+  }
+  h <- function(x0){
+  Z1S %*% solve(SSS) %*% TSS %*% solve(Z1S) %*% x0
+  }
+  list(g = g, h = h) 
+}
+
+lre_auto <- function(A, E = NULL, x0) {
+
+   if (is.null(E)) {
+     lre_auto_bk(A, x0)
+   } else {
+     lre_auto_klein(A, E, x0)
+   }
+}
+
+
+
+

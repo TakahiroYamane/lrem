@@ -1,0 +1,223 @@
+---
+title: "hw08 lrem_auto"
+author: "Yamane Takahiro"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{hw08 lrem_auto}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+lre_auto() is tool to solve the following system equations.
+$$
+Ex_{t+1} = Ax_t
+$$
+Then,
+$$
+\begin{align}
+x_t^2 &= g(x_t^1) \\
+x_{t+1}^1 &= h(x_t^1, x_t^2) = h(x_t)
+\end{align}
+$$
+1 When $E = I$,by Shur Decomposition, you get following equations.
+$$
+\begin{aligned}
+AV &= V\Lambda\\
+&\Updownarrow \\
+\begin{bmatrix}
+  A_{11} & A_{12} \\
+  A_{21} & A_{22}
+\end{bmatrix}
+\begin{bmatrix}
+  V_{1s} & V_{1u} \\
+  V_{2s} & V_{2u}
+\end{bmatrix}
+&=
+\begin{bmatrix}
+  V_{1s} & V_{1u} \\
+  V_{2s} & V_{2u}
+\end{bmatrix}
+\begin{bmatrix}
+  \Lambda_s & \\
+  & \Lambda_u
+\end{bmatrix}.
+\end{aligned}
+$$
+Then, 
+$$
+g(x_t^1) =  Q_{2s} Q_{1s}^{-1} x_t^1\\
+
+h(x_t^1, x_t^2) = A_{11} x_t^1 + A_{12} x_t^2
+$$
+You can use lre_auto() when you simulation the above equation.
+
+Example 1
+
+When $E = I$, for example, 
+$$
+E $= I\\
+A $= \begin{bmatrix}
+0.7000000 & 0.000000 & 1.2000000\\
+0.6363636 & 1.909091 & 0.1818182\\
+  0.0000000 & -1.000000 & 1.0000000
+\end{bmatrix}\\
+ 
+x_0^1 $= 0.1
+$$
+
+```{r}
+lre_auto_bk <- function(A, x0) {
+  # The contents of hw07's lre_auto
+   Asch <- Matrix::Schur(A)
+   Asch2 <- QZ::qz.dtrsen(Asch$T, Asch$Q, abs(Asch$EValues) <= 1)
+   Q1S <- Asch2$Q[1:npr,1:npr] 
+   Q2S <- Asch2$Q[(npr+1):(nrow(Asch2$Q)),1:npr]
+
+   g <- function(x0){
+   Q2S %*% solve(Q1S) %*% x0
+   }
+   h <- function(x0){
+   (A[1:npr, 1:npr] %*% x0) + (A[1:npr, (npr+1):ncol(A)] %*% Q2S %*% solve(Q1S)) %*% x0
+   }
+   list(g = g, h = h)
+}
+
+lre_auto_klein <- function(A, E, x0) {
+  # Solution here using QZ decomposition!
+  ret <- QZ::qz(A, E)
+  abs(ret$ALPHA / ret$BETA)
+  ord <- abs(ret$ALPHA / ret$BETA) <= 1
+  ret2 <- QZ::qz.dtgsen(ret$S, ret$T, ret$Q, ret$Z,select = ord)
+  Z1S <- ret2$Z[1:npr,1:npr]
+  Z2S <- ret2$Z[(npr+1):(nrow(ret2$Z))]
+  SSS <- ret2$T[1:npr, 1:npr]
+  TSS <- ret2$S[1:npr, 1:npr]
+  
+  g <- function(x0){
+  Z2S %*% solve(Z1S) %*% x0
+  }
+  h <- function(x0){
+  Z1S %*% solve(SSS) %*% TSS %*% solve(Z1S) %*% x0
+  }
+  list(g = g, h = h) 
+}
+
+lre_auto <- function(A, E, x0) {
+   if (is.null(E)) {
+     lre_auto_bk(A, x0)
+   } else {
+     lre_auto_klein(A, E, x0)
+   }
+}
+```
+
+```{r}
+
+lre_auto(A, E = NULL, x0)
+
+E <- matrix(c(
+  1.0000000, 0.000000, 0.0000000,
+  0.0000000, 1.000000, 0.0000000,
+  0.0000000, 0.000000, 1.0000000
+), byrow = TRUE, nrow = 3)  
+
+A <- matrix(c(
+  0.7000000, 0.000000, 1.2000000,
+  0.6363636, 1.909091, 0.1818182,
+  0.0000000, -1.000000, 1.0000000
+), byrow = TRUE, nrow = 3)  
+
+x0 <- 0.1
+
+simulate <- function(g, h, x0, t) {
+  
+  n1 <- length(x0)     # Number of predetermined variables
+  n2 <- length(g(x0))  # Number of non-predetermined variables
+  
+  pre <- 1:n1
+  npr <- (n1 + 1):(n1 + n2)
+  
+  out <- matrix(0, t, n1 + n2)  # Zero matrix for simulation output
+  
+  out[1, pre] <- x0     # Initial Condition
+  out[1, npr] <- g(x0)  # Eq. (2.1)
+  
+  for (i in 1:(t - 1)) {
+    out[i + 1, pre] <- h(out[i, pre])      # Slightly Modified
+    out[i + 1, npr] <- g(out[i + 1, pre])  # Eq. (2.1)
+  }
+  out
+}
+
+ret <- lre_auto(A, E, x0 = 0.1) 
+
+outret <- simulate(ret$g, ret$h, x0 = 0.1, t = 100)
+plot(outret[, 1])
+```
+2 When E is comformable, constant matrices,
+$$
+\begin{aligned}
+QEZ &= S = \begin{bmatrix}
+  S_{ss} & S_{su} \\
+  0 & S_{uu}
+\end{bmatrix},\\
+QAZ &= T = \begin{bmatrix}
+  T_{ss} & T_{su} \\
+  0 & T_{uu}
+\end{bmatrix},\\
+Z &= \begin{bmatrix}
+  Z_{1s} & Z_{1u} \\
+  Z_{2s} & Z_{2u} 
+\end{bmatrix}\\
+
+\end{aligned}
+$$
+Then,
+$$
+\begin{aligned}
+x_{t+1}^1 = h(x_t^1) = Z_{1s}S_{ss}^{-1}T_{ss}Z_{1s}^{-1}x_t^1\\
+x_t^2 = g(x_t^1) = Z_{2s}Z_{1s}^{-1}x_t^1
+
+\end{aligned}
+$$
+You can use lre_auto() when you simulation the above equation.
+
+Example 2
+
+When,
+$$
+E = \begin{bmatrix}
+0.7000000 & 0.000000 & 1.2000000\\
+0.6363636 & 1.909091 & 0.1818182\\
+-2.0000000 & -1.000000 & 0.0000000
+\end{bmatrix}\\
+A = \begin{bmatrix}
+0.7000000 & 0.000000 & 1.2000000\\
+0.6363636 & 1.909091 & 0.1818182\\
+  0.0000000 & -1.000000 & 1.0000000
+\end{bmatrix}\\
+ 
+x_0^1 = 0.1
+$$
+
+```{r}
+E <- matrix(c(
+  0.7000000, 0.000000, 1.2000000,
+  0.6363636, 1.909091, 0.1818182,
+  -2.0000000, -1.000000, 1.0000000
+), byrow = TRUE, nrow = 3)
+
+A <- matrix(c(
+  0.7000000, 0.000000, 1.2000000,
+  0.6363636, 1.909091, 0.1818182,
+  0.0000000, -1.000000, 1.0000000
+), byrow = TRUE, nrow = 3) 
+
+x0 <- 0.1
+
+ret2 <- lre_auto(A, E, x0 = 0.1) 
+
+outret2 <- simulate(ret2$g, ret2$h, x0 = 0.1, t = 100)
+plot(outret2[, 1])
+```
