@@ -13,13 +13,15 @@ lre_auto() is tool to solve the following system equations.
 $$
 Ex_{t+1} = Ax_t
 $$
+
 Then,
 $$
-\begin{align}
-x_t^2 &= g(x_t^1) \\
+\begin{aligned}
+x_t^2 &= g(x_t^1)\\
 x_{t+1}^1 &= h(x_t^1, x_t^2) = h(x_t)
-\end{align}
+\end{aligned}
 $$
+
 1 When $E = I$,by Shur Decomposition, you get following equations.
 $$
 \begin{aligned}
@@ -46,29 +48,39 @@ AV &= V\Lambda\\
 $$
 Then, 
 $$
+\begin{aligned}
 g(x_t^1) =  Q_{2s} Q_{1s}^{-1} x_t^1\\
-
+\\
 h(x_t^1, x_t^2) = A_{11} x_t^1 + A_{12} x_t^2
+\end{aligned}
 $$
 You can use lre_auto() when you simulation the above equation.
 
 Example 1
 
-When $E = I$, for example, 
+When $E = I$, for example,
 $$
-E $= I\\
-A $= \begin{bmatrix}
+E = I
+$$
+$$
+\begin{aligned}
+A = \begin{bmatrix}
 0.7000000 & 0.000000 & 1.2000000\\
 0.6363636 & 1.909091 & 0.1818182\\
   0.0000000 & -1.000000 & 1.0000000
 \end{bmatrix}\\
- 
-x_0^1 $= 0.1
+\end{aligned}
+$$
+
+$$
+x_0^1 = 0.1
 $$
 
 ```{r}
 lre_auto_bk <- function(A, x0) {
   # The contents of hw07's lre_auto
+   npr <- length(x0)
+   A <-as.matrix(A)
    Asch <- Matrix::Schur(A)
    Asch2 <- QZ::qz.dtrsen(Asch$T, Asch$Q, abs(Asch$EValues) <= 1)
    Q1S <- Asch2$Q[1:npr,1:npr] 
@@ -85,6 +97,8 @@ lre_auto_bk <- function(A, x0) {
 
 lre_auto_klein <- function(A, E, x0) {
   # Solution here using QZ decomposition!
+  npr <- length(x0)
+  A <-as.matrix(A)
   ret <- QZ::qz(A, E)
   abs(ret$ALPHA / ret$BETA)
   ord <- abs(ret$ALPHA / ret$BETA) <= 1
@@ -114,8 +128,6 @@ lre_auto <- function(A, E, x0) {
 
 ```{r}
 
-lre_auto(A, E = NULL, x0)
-
 E <- matrix(c(
   1.0000000, 0.000000, 0.0000000,
   0.0000000, 1.000000, 0.0000000,
@@ -129,6 +141,7 @@ A <- matrix(c(
 ), byrow = TRUE, nrow = 3)  
 
 x0 <- 0.1
+
 
 simulate <- function(g, h, x0, t) {
   
@@ -155,31 +168,35 @@ ret <- lre_auto(A, E, x0 = 0.1)
 outret <- simulate(ret$g, ret$h, x0 = 0.1, t = 100)
 plot(outret[, 1])
 ```
+
 2 When E is comformable, constant matrices,
+
 $$
-\begin{aligned}
-QEZ &= S = \begin{bmatrix}
+QEZ = S = \begin{bmatrix}
   S_{ss} & S_{su} \\
   0 & S_{uu}
-\end{bmatrix},\\
-QAZ &= T = \begin{bmatrix}
+\end{bmatrix}
+$$
+$$
+QAZ = T = \begin{bmatrix}
   T_{ss} & T_{su} \\
   0 & T_{uu}
-\end{bmatrix},\\
-Z &= \begin{bmatrix}
+\end{bmatrix}
+$$
+$$
+Z = \begin{bmatrix}
   Z_{1s} & Z_{1u} \\
   Z_{2s} & Z_{2u} 
 \end{bmatrix}\\
-
-\end{aligned}
 $$
+
 Then,
-$$
-\begin{aligned}
-x_{t+1}^1 = h(x_t^1) = Z_{1s}S_{ss}^{-1}T_{ss}Z_{1s}^{-1}x_t^1\\
-x_t^2 = g(x_t^1) = Z_{2s}Z_{1s}^{-1}x_t^1
 
-\end{aligned}
+$$
+x_{t+1}^1 = h(x_t^1) = Z_{1s}S_{ss}^{-1}T_{ss}Z_{1s}^{-1}x_t^1
+$$
+$$
+x_t^2 = g(x_t^1) = Z_{2s}Z_{1s}^{-1}x_t^1
 $$
 You can use lre_auto() when you simulation the above equation.
 
@@ -192,12 +209,15 @@ E = \begin{bmatrix}
 0.6363636 & 1.909091 & 0.1818182\\
 -2.0000000 & -1.000000 & 0.0000000
 \end{bmatrix}\\
+$$
+$$
 A = \begin{bmatrix}
 0.7000000 & 0.000000 & 1.2000000\\
 0.6363636 & 1.909091 & 0.1818182\\
   0.0000000 & -1.000000 & 1.0000000
 \end{bmatrix}\\
- 
+$$
+$$
 x_0^1 = 0.1
 $$
 
