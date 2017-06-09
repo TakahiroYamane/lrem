@@ -1,11 +1,22 @@
+#' lre_ar
+#'
+#' @param A coeffients of previous period
+#' @param E coeffients of latter period
+#' @param B matrixB
+#' @param Phi matrixPhi
+#' @param nx number od predetermined variables
+#'
+#' @return g and h functions
+#'
+#' @export
 lre_ar <- function(A, E, B, Phi, nx){
-  npr <- length(nx)
+  npr <- nx
   A <- as.matrix(A)
   E <- as.matrix(E)
   B <- as.matrix(B)
   Phi <- as.matrix(Phi)
 
-  Zero <- as.numeric(nrow(Phi) %*% ncol(A), nrow = (nrow(Phi)), ncol = (ncol(A)))
+  Zero <- as.numeric((nrow(Phi)) %*% (ncol(A)), nrow = (nrow(Phi)), ncol = (ncol(A)))
   i <- diag(nrow(Phi))
   A2 <- matrix(c(Phi, B, Zero, A), nrow = (nrow(Phi) + nrow(B)), ncol = (ncol(B) + ncol(A)))
   E2 <- matrix(c(i, Zero, Zero, A), nrow = (nrow(Phi) + nrow(B)), ncol = (ncol(B) + ncol(A)))
