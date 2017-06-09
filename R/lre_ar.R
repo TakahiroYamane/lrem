@@ -16,7 +16,7 @@ lre_ar <- function(A, E, B, Phi, nx){
   B <- as.matrix(B)
   Phi <- as.matrix(Phi)
 
-  Zero <- as.numeric((nrow(Phi)) %*% (ncol(A)), nrow = (nrow(Phi)), ncol = (ncol(A)))
+  Zero <- matrix(0, nrow = nrow(Phi), ncol = ncol(A))
   i <- diag(nrow(Phi))
   A2 <- matrix(c(Phi, B, Zero, A), nrow = (nrow(Phi) + nrow(B)), ncol = (ncol(B) + ncol(A)))
   E2 <- matrix(c(i, Zero, Zero, A), nrow = (nrow(Phi) + nrow(B)), ncol = (ncol(B) + ncol(A)))
