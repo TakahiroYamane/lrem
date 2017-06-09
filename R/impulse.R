@@ -1,4 +1,4 @@
-#' impluse
+#' impulse
 #'
 #' @param g function g
 #' @param h function h
@@ -9,7 +9,7 @@
 #' @return g and h functions
 #'
 #' @export
-impluse <- function(g, h, x0, t, e1){
+impulse <- function(g, h, x0, t, e1){
   n1 <- length(x0)
   n2 <- length(g(x0))
 

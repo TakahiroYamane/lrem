@@ -16,7 +16,7 @@ lre_auto <- function(A, E, nx) {
 }
 
 lre_auto_bk <- function(A, nx) {
-  npr <- length(nx)
+  npr <- nx
   A <-as.matrix(A)
   Asch <- Matrix::Schur(A)
   Asch2 <- QZ::qz.dtrsen(Asch$T, Asch$Q, abs(Asch$EValues) <= 1)
