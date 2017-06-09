@@ -1,23 +1,22 @@
-#' lrem
+#' lre_auto
 #'
 #' @param A coeffients of previous period
-#' @param x0 double < 0, initial values
 #' @param E coeffients of latter period
+#' @param nx number od predetermined variables
 #'
 #' @return g and h functions
 #'
 #' @export
-lre_auto <- function(A, E, x0) {
+lre_auto <- function(A, E, nx) {
   if (is.null(E)) {
-    lre_auto_bk(A, x0)
+    lre_auto_bk(A, nx)
   } else {
-    lre_auto_klein(A, E, x0)
+    lre_auto_klein(A, E, nx)
   }
 }
 
-lre_auto_bk <- function(A, x0) {
-  # The contents of hw07's lre_auto
-  npr <- length(x0)
+lre_auto_bk <- function(A, nx) {
+  npr <- length(nx)
   A <-as.matrix(A)
   Asch <- Matrix::Schur(A)
   Asch2 <- QZ::qz.dtrsen(Asch$T, Asch$Q, abs(Asch$EValues) <= 1)
@@ -33,10 +32,10 @@ lre_auto_bk <- function(A, x0) {
   list(g = g, h = h)
 }
 
-lre_auto_klein <- function(A, E, x0) {
-  # Solution here using QZ decomposition!
-  npr <- length(x0)
-  A <-as.matrix(A)
+lre_auto_klein <- function(A, E, nx) {
+  npr <- nx
+  A <- as.matrix(A)
+  E <- as.matrix(E)
   ret <- QZ::qz(A, E)
   abs(ret$ALPHA / ret$BETA)
   ord <- abs(ret$ALPHA / ret$BETA) <= 1
