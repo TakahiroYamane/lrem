@@ -25,7 +25,7 @@ simulate <- function(g, h, x0, t, e){
   out[1, npr] <- g(x0)
 
   for (i in 1:(t - 1)) {
-    out[i + 1, pre] <- h(out[i, pre]) + matrix(c(i, Zero)) %*% e[i, ]
+    out[i + 1, pre] <- h(out[i, pre]) + matrix(c(i, Zero)) %*% e[i + 1]
     out[i + 1, npr] <- g(out[i + 1, pre])
   }
   out
