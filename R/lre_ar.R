@@ -22,10 +22,11 @@ lre_ar <- function(A, E, B, Phi, nx){
   i <- diag(nrow(Phi))
 
   AA <- cbind(rbind(Phi, B), rbind(Zero2, A))
-  EE <- cbind(rbind(i, Zero1), rbind(Zero2, A))
+  EE <- cbind(rbind(i, Zero1), rbind(Zero2, E))
 
   ret <- QZ::qz(AA, EE)
-  ord <- abs(ret$ALPHA / ret$BETA) <= 1
+  abs(ret$ALPHA / ret$BETA)
+  ord <- abs(ret$ALPHA / ret$BETA) < 1
   ret2 <- QZ::qz.dtgsen(ret$S, ret$T, ret$Q, ret$Z, select = ord)
   Z1S <- ret2$Z[1:pren,1:pren]
   Z2S <- ret2$Z[(pren + 1):(nrow(ret2$Z))]
