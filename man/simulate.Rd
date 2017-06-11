@@ -2,7 +2,9 @@
 % Please edit documentation in R/simulate.R
 \name{simulate}
 \alias{simulate}
-\title{simulate}
+\title{simulate
+\code{}
+Simulation given (g,h,x10,ξ)}
 \usage{
 simulate(g, h, x0, t, e)
 }
@@ -15,11 +17,13 @@ simulate(g, h, x0, t, e)
 
 \item{t}{integer, simulation length}
 
-\item{e}{vector or matrix, each row e[k, ]}
+\item{e}{vector or matrix, each row e[k, ] corresponds to ξ_k+1}
 }
 \value{
-g and h functions
+out: matrix of simulation output
 }
 \description{
 simulate
+\code{}
+Simulation given (g,h,x10,ξ)
 }

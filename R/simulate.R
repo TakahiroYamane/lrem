@@ -1,15 +1,17 @@
 #' simulate
-#'
+#' \code{}
+#' Simulation given (g,h,x10,ξ)
 #' @param g function g
 #' @param h function h
 #' @param x0 steady state
 #' @param t integer, simulation length
-#' @param e vector or matrix, each row e[k, ]
+#' @param e vector or matrix, each row e[k, ] corresponds to ξ_k+1
 #'
-#' @return g and h functions
+#' @return out: matrix of simulation output
 #'
 #' @export
 simulate <- function(g, h, x0, t, e){
+  if (is.null(t)){
   n1 <- length(x0)
   n2 <- length(g(x0))
 
@@ -18,15 +20,16 @@ simulate <- function(g, h, x0, t, e){
 
   out <- matrix(0, t, n1 + n2)
 
-  Zero <- as.numeric(length(x0), nrow = (nrow(x0)), ncol = (ncol(x0)))
-  i <- diag(nrow(e))
-
   out[1, pre] <- x0
   out[1, npr] <- g(x0)
 
   for (i in 1:(t - 1)) {
-    out[i + 1, pre] <- h(out[i, pre]) + matrix(c(i, Zero)) %*% e[i + 1]
+    out[i + 1, pre] <- h(out[i, pre]) + e[i, ]
     out[i + 1, npr] <- g(out[i + 1, pre])
   }
   out
+  }
+  else{
+
+  }
 }

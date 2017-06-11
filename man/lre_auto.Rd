@@ -2,20 +2,24 @@
 % Please edit documentation in R/lre_auto.R
 \name{lre_auto}
 \alias{lre_auto}
-\title{lre_auto}
+\title{lre_auto
+\code{}
+Compute (g,h) from (A,E,n1)}
 \usage{
 lre_auto(A, E, nx)
 }
 \arguments{
-\item{A}{coeffients of previous period}
+\item{A}{coefficents of previous period}
 
-\item{E}{coeffients of latter period}
+\item{E}{coefficents of latter period}
 
-\item{nx}{number od predetermined variables}
+\item{nx}{number of predetermined variables, n_1}
 }
 \value{
-g and h functions
+list(g = g, h = h): list of two functions(g,h)
 }
 \description{
 lre_auto
+\code{}
+Compute (g,h) from (A,E,n1)
 }

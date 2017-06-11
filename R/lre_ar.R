@@ -1,12 +1,15 @@
 #' lre_ar
 #'
-#' @param A coeffients of previous period
-#' @param E coeffients of latter period
-#' @param B matrixB
-#' @param Phi matrixPhi
+#' \code{}
+#' Compute (g,h) from (A,E,B,Φ,n1)
+#'
+#' @param A matrix A
+#' @param E matrix B
+#' @param B matrix B
+#' @param Phi matrix Φ
 #' @param nx number od predetermined variables
 #'
-#' @return g and h functions
+#' @return list(g = g, h = h):list of two functions(g,h)
 #'
 #' @export
 lre_ar <- function(A, E, B, Phi, nx){

@@ -1,5 +1,5 @@
 ---
-title: "hw08 lrem_auto"
+title: "lrem"
 author: "Yamane Takahiro"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette

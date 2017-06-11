@@ -2,7 +2,9 @@
 % Please edit documentation in R/impulse.R
 \name{impulse}
 \alias{impulse}
-\title{impulse}
+\title{impulse
+\code{}
+Impulse response given (g,h,ξ1)}
 \usage{
 impulse(g, h, x0, t, e1)
 }
@@ -11,15 +13,17 @@ impulse(g, h, x0, t, e1)
 
 \item{h}{function h}
 
-\item{x0}{steady state}
+\item{x0}{steady state. For linear models, it’s the origin.}
 
 \item{t}{integer, simulation length}
 
 \item{e1}{i-th element e[i] corresponds to a shock to i-th endogenous variable}
 }
 \value{
-g and h functions
+out: matrix of simulation output
 }
 \description{
 impulse
+\code{}
+Impulse response given (g,h,ξ1)
 }

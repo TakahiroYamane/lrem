@@ -7,19 +7,20 @@
 lre_ar(A, E, B, Phi, nx)
 }
 \arguments{
-\item{A}{coeffients of previous period}
+\item{A}{matrix A}
 
-\item{E}{coeffients of latter period}
+\item{E}{matrix B}
 
-\item{B}{matrixB}
+\item{B}{matrix B}
 
-\item{Phi}{matrixPhi}
+\item{Phi}{matrix Φ}
 
 \item{nx}{number od predetermined variables}
 }
 \value{
-g and h functions
+list(g = g, h = h):list of two functions(g,h)
 }
 \description{
-lre_ar
+\code{}
+Compute (g,h) from (A,E,B,Φ,n1)
 }

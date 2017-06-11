@@ -1,10 +1,11 @@
 #' lre_auto
+#' \code{}
+#' Compute (g,h) from (A,E,n1)
+#' @param A coefficents of previous period
+#' @param E coefficents of latter period
+#' @param nx number of predetermined variables, n_1
 #'
-#' @param A coeffients of previous period
-#' @param E coeffients of latter period
-#' @param nx number od predetermined variables
-#'
-#' @return g and h functions
+#' @return list(g = g, h = h): list of two functions(g,h)
 #'
 #' @export
 lre_auto <- function(A, E, nx) {
@@ -38,7 +39,7 @@ lre_auto_klein <- function(A, E, nx) {
   E <- as.matrix(E)
   ret <- QZ::qz(A, E)
   abs(ret$ALPHA / ret$BETA)
-  ord <- abs(ret$ALPHA / ret$BETA) <= 1
+  ord <- abs(ret$ALPHA / ret$BETA) < 1
   ret2 <- QZ::qz.dtgsen(ret$S, ret$T, ret$Q, ret$Z,select = ord)
   Z1S <- ret2$Z[1:npr,1:npr]
   Z2S <- ret2$Z[(npr+1):(nrow(ret2$Z))]
