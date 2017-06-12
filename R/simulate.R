@@ -1,9 +1,9 @@
 #' simulate
 #' \code{}
-#' Simulation given (g,h,x10,ξ)
+#' Simulation given (g,h,x^1_0,ξ)
 #' @param g function g
 #' @param h function h
-#' @param x0 steady state
+#' @param x0 initial x^1_0
 #' @param t integer, simulation length
 #' @param e vector or matrix, each row e[k, ] corresponds to ξ_k+1
 #'

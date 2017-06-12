@@ -4,7 +4,7 @@
 \alias{simulate}
 \title{simulate
 \code{}
-Simulation given (g,h,x10,ξ)}
+Simulation given (g,h,x^1_0,ξ)}
 \usage{
 simulate(g, h, x0, t, e)
 }
@@ -13,7 +13,7 @@ simulate(g, h, x0, t, e)
 
 \item{h}{function h}
 
-\item{x0}{steady state}
+\item{x0}{initial x^1_0}
 
 \item{t}{integer, simulation length}
 
@@ -25,5 +25,5 @@ out: matrix of simulation output
 \description{
 simulate
 \code{}
-Simulation given (g,h,x10,ξ)
+Simulation given (g,h,x^1_0,ξ)
 }

@@ -22,7 +22,7 @@ x_{t+1}^1 &= h(x_t^1, x_t^2) = h(x_t)
 \end{aligned}
 $$
 
-1 When $E = I$,by Shur Decomposition, you get following equations.
+1 When $E$ is null,by Shur Decomposition, you get following equations.
 $$
 \begin{aligned}
 AV &= V\Lambda\\
@@ -59,9 +59,6 @@ You can use lre_auto() when you simulation the above equation.
 Example 1
 
 When $E = I$, for example,
-$$
-E = I
-$$
 $$
 \begin{aligned}
 A = \begin{bmatrix}
